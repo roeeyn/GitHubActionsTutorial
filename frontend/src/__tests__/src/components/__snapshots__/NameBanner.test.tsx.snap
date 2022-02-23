@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Renders Hello World 1`] = `
+<section
+  className="wrapper"
+>
+  <p
+    className="banner"
+  >
+    Hello
+    World
+    !
+  </p>
+</section>
+`;
+
+exports[`Renders Pedrito 1`] = `
+<section
+  className="wrapper"
+>
+  <p
+    className="banner"
+  >
+    Hello
+    Pedrito
+    !
+  </p>
+</section>
+`;

@@ -1,0 +1,28 @@
+main {
+  background: rgb(6, 0, 101);
+  background: linear-gradient(
+    90deg,
+    rgba(6, 0, 101, 1) 0%,
+    rgba(0, 212, 255, 1) 100%
+  );
+  min-height: 100vh;
+  min-width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+p {
+  margin: 0;
+}
+
+.main-wrapper {
+  background: hsl(185.1, 100%, 90.8%);
+  padding: 90px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}

@@ -1,0 +1,8 @@
+.wrapper {
+  margin: 0;
+}
+
+.banner {
+  margin: inherit;
+  font-size: 6em;
+}
