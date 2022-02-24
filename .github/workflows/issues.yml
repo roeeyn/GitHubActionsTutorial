@@ -1,0 +1,28 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Add comment
+on:
+  issues:
+    types:
+      - labeled
+jobs:
+  add-comment:
+    if: github.event.label.name == 'ayuda'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Add comment
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          reactions: heart
+          body: |
+            Este es un issue que requiere ayuda de la comunidad :sparkles:. Recuerda hacer lo siguiente
+            - [ ] Hacer tu PR
+            - [ ] Correr todas las pruebas
+            - [ ] Etiquetar a un maintainer
+            Muchas gracias por colaborar! :tada:
