@@ -1,13 +1,10 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
-
-name: Production Workflow
+name: Frontend Workflow
 
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
+    paths: 
+      - frontend/
 
 jobs:
   webinar-formatting:
@@ -17,7 +14,7 @@ jobs:
       - name: Prettify code
         uses: creyD/prettier_action@v4.2
         with:
-          prettier_options: --check **/*.{js,ts,tsx,md}
+          prettier_options: --check frontend/**/*.{js,ts,tsx,md}
 
   webinar-test:
     runs-on: ubuntu-latest
@@ -25,7 +22,6 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-2016]
         node-version: [12.x, 14.x, 16.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     steps:
       - uses: actions/checkout@v2
       - name: Using Node.js ${{ matrix.node-version }}
@@ -33,8 +29,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
-      - run: npm ci
-      - run: npm test
+      - run: cd frontend && npm ci
+      - run: cd frontend && npm test
 
   webinar-build:
     needs: [webinar-test, webinar-formatting]
@@ -48,12 +44,12 @@ jobs:
           cache: "npm"
       - name: npm install and build project
         run: |
-          npm ci && npm run build
+          cd frontend && npm ci && npm run build
 
       - uses: actions/upload-artifact@v2
         with:
           name: webinar-static-build
-          path: build/
+          path: frontend/build/
 
   webinar-deploy:
     needs: webinar-build
@@ -71,4 +67,4 @@ jobs:
           path: build/
       - name: Deploy to AWS S3
         run: |
-          aws s3 cp build/ s3://webinar-github-actions --recursive
+          aws s3 cp build/ s3://github-actions-frontend-tutorial --recursive
