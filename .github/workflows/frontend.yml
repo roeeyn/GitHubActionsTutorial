@@ -53,6 +53,9 @@ jobs:
 
   webinar-deploy:
     needs: webinar-build
+    environment:
+      name: production
+      url: http://github-actions-frontend-tutorial.s3-website-us-east-1.amazonaws.com
     runs-on: ubuntu-latest
     steps:
       - name: Set AWS credentials

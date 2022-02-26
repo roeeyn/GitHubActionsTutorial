@@ -1,3 +1,5 @@
+![S3 frontend workflow](https://github.com/roeeyn/GitHubActionsTutorial/actions/workflows/frontend.yml/badge.svg)
+
 # GitHub Actions Tutorial
 
 This is a brief intro of how to use GitHub Actions for a frontend (static S3) and a backend (lambda).
