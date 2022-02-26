@@ -12,7 +12,7 @@ function App() {
     <main>
       <div className="main-wrapper">
         <p>
-          Input your most recent favorite name{" "}
+          Input your name{" "}
           <input value={currentName} onChange={catchChange} type="text" />
         </p>
         <NameBanner name={currentName} />
