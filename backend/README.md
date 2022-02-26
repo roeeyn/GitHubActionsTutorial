@@ -138,10 +138,10 @@ Once we ran the tests, we want to upload the code to the lambda. For this, we're
 ```yaml
 webinar-deploy:
     needs: [webinar-testing, webinar-formatting]
-    runs-on: ubuntu-latest
     environment:
       name: production
       url: https://du717vx7qb.execute-api.us-east-2.amazonaws.com/github-actions-backend-tutorial
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
     - uses: appleboy/lambda-action@master

@@ -55,10 +55,10 @@ jobs:
 
   webinar-deploy:
     needs: webinar-build
+    runs-on: ubuntu-latest
     environment:
       name: production
       url: http://github-actions-frontend-tutorial.s3-website-us-east-1.amazonaws.com
-    runs-on: ubuntu-latest
     steps:
       - name: Set AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
