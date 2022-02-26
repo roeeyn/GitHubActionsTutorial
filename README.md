@@ -1,4 +1,5 @@
 ![S3 frontend workflow](https://github.com/roeeyn/GitHubActionsTutorial/actions/workflows/frontend.yml/badge.svg)
+![Lambda backend workflow](https://github.com/roeeyn/GitHubActionsTutorial/actions/workflows/backend.yml/badge.svg)
 
 # GitHub Actions Tutorial
 

@@ -1,12 +1,12 @@
 # Nombre del workflow
-name: Staging Workflow
+name: Backend Workflow
 
 # Cuándo se ejecuta el workflow
 on:
   push:
     branches: [ main ]
     paths:
-      - backend/
+      - backend/**
 
 # Trabajos
 jobs:
@@ -16,6 +16,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: psf/black@stable
+      with:
+        src: 'backend/'
 
   webinar-testing:
     runs-on: ubuntu-latest
@@ -29,40 +31,22 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-    - run: pip install -r requirements.txt
-    - run: pytest
-
-  webinar-build:
-    needs: [webinar-testing, webinar-formatting]
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Usando Python 3.10.2
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.10.2
-    - name: Build Project
-      run: |
-        zip -r lambda_code.zip . -x .git -x .pytest_cache/* -x __pycache__/*
-    - uses: actions/upload-artifact@v2
-      with:
-        name: webinar-lambda-code
-        path: lambda_code.zip
+    - run: cd backend && pip install -r requirements.txt
+    - run: cd backend && pytest
 
   webinar-deploy:
-    needs: [webinar-build]
+    needs: [webinar-testing, webinar-formatting]
     runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://du717vx7qb.execute-api.us-east-2.amazonaws.com/github-actions-backend-tutorial
     steps:
-    - name: Set AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
+    - uses: actions/checkout@master
+    - name: Deploy code to Lambda
+      uses: mariamrf/py-lambda-action@v1.0.0
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-1
-    - uses: actions/download-artifact@v2
-      with:
-        name: webinar-lambda-code
-        path: lambda_code.zip
-    - name: Deploy to AWS Lambda
-      run: |
-        aws lambda update-function-code --function-name webinar-template-function --zip-file fileb://lambda_code.zip
+        lambda_function_name: 'github-actions-backend-tutorial'
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_DEFAULT_REGION: 'us-east-2'
