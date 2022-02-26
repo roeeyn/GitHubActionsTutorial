@@ -21,6 +21,7 @@ We need to create the bucket because we will use it as our static web server. It
 To test that our website is working correctly, we can upload manually the project to our recently created S3 bucket.
 
 To do this, we can follow the next steps:
+
 1. Build the project to generate the static files:
 
 ```shell
@@ -64,12 +65,12 @@ on:
     # We will only run this on a push in
     #   the main branch
     branches: [main]
-...
 ```
 
 ### 1.2 Definition of the Jobs
 
 We will have four jobs in our workflow:
+
 - Formatting
 - Test
 - Build
@@ -101,31 +102,32 @@ The test job is going to be run in parallel with the previous job, which means i
 This job is a special job as it contains a special feature named `matrix`. This feature let us create multiple sub-jobs based on certain parameters, in this case, the os type and node version. The matrix contains two variables with two and three values respectively, which means we will have six (all combinations of both variables) different test scenarios.
 
 ```yaml
-...
+
+---
 webinar-test: # Name of the job
-    runs-on: ubuntu-latest # Where the job is going to be executed
-    strategy:
-      matrix:
-        # Define variable 'os'
-        os: [ubuntu-latest, windows-2016]
-        # Define variable 'node-version'
-        node-version: [12.x, 14.x, 16.x]
-    steps:
-      - uses: actions/checkout@v2 # Checkout the code in new environment
-      - name: Using Node.js ${{ matrix.node-version }} # Name of the job depending on the 'node-version' variable
-        uses: actions/setup-node@v2
-        with:
-          # Configure node depending on the 'node-version' variable
-          node-version: ${{ matrix.node-version }}
-          cache: "npm"
-      # Install dependencies
-      - run: cd frontend && npm ci
-      # Run the project unit tests
-      - run: cd frontend && npm test
-...
+  runs-on: ubuntu-latest # Where the job is going to be executed
+  strategy:
+    matrix:
+      # Define variable 'os'
+      os: [ubuntu-latest, windows-2016]
+      # Define variable 'node-version'
+      node-version: [12.x, 14.x, 16.x]
+  steps:
+    - uses: actions/checkout@v2 # Checkout the code in new environment
+    - name: Using Node.js ${{ matrix.node-version }} # Name of the job depending on the 'node-version' variable
+      uses: actions/setup-node@v2
+      with:
+        # Configure node depending on the 'node-version' variable
+        node-version: ${{ matrix.node-version }}
+        cache: "npm"
+    # Install dependencies
+    - run: cd frontend && npm ci
+    # Run the project unit tests
+    - run: cd frontend && npm test
 ```
 
 #### 1.2.3 Build Job
+
 This job is focused on build the static files based on our React project. This is why we only want to run this job in case the previous jobs ran successfully, because otherwise it wouldn't make sense to build the project with files with errors.
 
 To indicate that we only want to run this job if another job or jobs were successful, we need to include the `needs` keyword.
@@ -164,26 +166,26 @@ Additionally, we will only run this job in case the `webinar-build` job ran succ
 
 ```yaml
 webinar-deploy:
-    needs: webinar-build
-    runs-on: ubuntu-latest
-    steps:
-      # Configuring the AWS credentials in the new environment
-      - name: Set AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          # The secrets object is available to every action, we only need to define which key we want to assign
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-      # We download the previously uploaded 'webinar-static-build' into the build/ folder.
-      - uses: actions/download-artifact@v2
-        with:
-          name: webinar-static-build
-          path: build/
-      # We upload the content of the build/ folder into the bucket.
-      - name: Deploy to AWS S3
-        run: |
-          aws s3 cp build/ s3://github-actions-frontend-tutorial --recursive
+  needs: webinar-build
+  runs-on: ubuntu-latest
+  steps:
+    # Configuring the AWS credentials in the new environment
+    - name: Set AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        # The secrets object is available to every action, we only need to define which key we want to assign
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+    # We download the previously uploaded 'webinar-static-build' into the build/ folder.
+    - uses: actions/download-artifact@v2
+      with:
+        name: webinar-static-build
+        path: build/
+    # We upload the content of the build/ folder into the bucket.
+    - name: Deploy to AWS S3
+      run: |
+        aws s3 cp build/ s3://github-actions-frontend-tutorial --recursive
 ```
 
 # Developing the Project
