@@ -139,16 +139,18 @@ Once we ran the tests, we want to upload the code to the lambda. For this, we're
 webinar-deploy:
     needs: [webinar-testing, webinar-formatting]
     runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://du717vx7qb.execute-api.us-east-2.amazonaws.com/github-actions-backend-tutorial
     steps:
     - uses: actions/checkout@master
-    - name: Deploy code to Lambda
-      uses: mariamrf/py-lambda-action@v1.0.0
+    - uses: appleboy/lambda-action@master
       with:
-        lambda_function_name: 'webinar-template-function'
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_DEFAULT_REGION: 'us-east-1'
+        aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws_region: us-east-2
+        function_name: github-actions-backend-tutorial
+        source: backend/
 ```
 
 # Developing the Project
