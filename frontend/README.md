@@ -102,7 +102,6 @@ The test job is going to be run in parallel with the previous job, which means i
 This job is a special job as it contains a special feature named `matrix`. This feature let us create multiple sub-jobs based on certain parameters, in this case, the os type and node version. The matrix contains two variables with two and three values respectively, which means we will have six (all combinations of both variables) different test scenarios.
 
 ```yaml
-
 ---
 webinar-test: # Name of the job
   runs-on: ubuntu-latest # Where the job is going to be executed
