@@ -5,6 +5,8 @@ name: Staging Workflow
 on:
   push:
     branches: [ main ]
+    paths:
+      - backend/
 
 # Trabajos
 jobs:
