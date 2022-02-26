@@ -65,6 +65,8 @@ on:
     # We will only run this on a push in
     #   the main branch
     branches: [main]
+    paths:
+      - frontend/**
 ```
 
 ### 1.2 Definition of the Jobs
