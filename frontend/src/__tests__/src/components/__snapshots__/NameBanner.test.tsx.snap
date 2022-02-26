@@ -7,7 +7,7 @@ exports[`Renders Hello World 1`] = `
   <p
     className="banner"
   >
-    Hello
+    Hello 
     World
     !
   </p>
@@ -21,7 +21,7 @@ exports[`Renders Pedrito 1`] = `
   <p
     className="banner"
   >
-    Hello
+    Hello 
     Pedrito
     !
   </p>
